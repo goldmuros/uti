@@ -5,9 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user:{
-      role: '',
-      name: ''
+    patients: [],
+    user: {
+      role: 'doctor',
+      name: 'Bel'
     },
     activePage: '',
     mediaQuery: ''
