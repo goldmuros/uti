@@ -3,7 +3,7 @@
     <v-container fluid class="grid-list-md text-md-center">
       <v-layout row wrap>
         <v-flex md3>
-          <pacients></pacients>
+          <Pacientes></Pacientes>
         </v-flex>
         <v-flex md9>
           <!-- Panel central -->
@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import Pacients from '../components/desktop/Pacients.vue'
+import Pacientes from '../components/desktop/Pacientes.vue'
 
 export default {
   components: {
-    Pacients
+    Pacientes
   }
 }
 </script>

@@ -1,8 +1,14 @@
-export const config_firebase = {
+import firebase from 'firebase'
+import 'firebase/firestore'
+
+const config_firebase = {
   apiKey: '',
   authDomain: '',
   databaseURL: '',
   projectId: '',
-  storageBucket: '',
-  messagingSenderId: ''
+  storageBucket: ''
 }
+
+firebase.initializeApp(config_firebase)
+
+export const db = firebase.firestore()

@@ -19,9 +19,6 @@
 </template>
 
 <script>
-import * as firebase from 'firebase'
-import config_firebase from './config/config-firebase.js'
-
 export default {
   name: 'UTI App',
   data () {
@@ -41,7 +38,7 @@ export default {
   },
   created () {
     let mediaQueryMobile = window.matchMedia('(max-width: 700px)')
-    let mediaQueryTablet = window.matchMedia('(max-width: 1024px)')
+    // let mediaQueryTablet = window.matchMedia('(max-width: 1024px)')
 
     let mediaQuery = 'desktop'
 
@@ -51,8 +48,9 @@ export default {
       mediaQuery = 'tablet'
 
     this.$store.commit('setMediaQuery', mediaQuery)
-
-    firebase.initializeApp(config_firebase)
+    this.$store.dispatch('getPacientes').catch(() => {
+      console.log('Hay un problema con Firebase :<')
+    })
   }
 }
 </script>
