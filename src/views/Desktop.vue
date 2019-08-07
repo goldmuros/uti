@@ -5,8 +5,8 @@
         <v-flex md3>
           <Pacientes></Pacientes>
         </v-flex>
-        <v-flex md9>
-          <!-- Panel central -->
+        <v-flex md9 v-if="showPaciente">
+          <panel-central></panel-central>
         </v-flex>
       </v-layout>
     </v-container>
@@ -15,10 +15,17 @@
 
 <script>
 import Pacientes from '../components/desktop/Pacientes.vue'
+import PanelCentral from '../components/desktop/PanelCentral.vue'
 
 export default {
+  computed: {
+    showPaciente () {
+      return this.$store.getters.getShowPacienteSeleccionado
+    }
+  },
   components: {
-    Pacientes
+    Pacientes,
+    PanelCentral
   }
 }
 </script>

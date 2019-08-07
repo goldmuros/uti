@@ -4,7 +4,7 @@
       <v-card 
         class='ma-3 text-xs-left elevation-5 light-green lighten-1 cursor' 
         v-for="(paciente, index) in pacientes"
-        :key="index">
+        :key="index" @click="cargarPaciente(paciente)">
         <v-container fluid grid-list-xs>
           <v-layout row wrap>
             <!-- Si tiene el permiso doctor -->
@@ -13,10 +13,10 @@
               <div>Nombre: <b>{{ paciente.data.nombre }}</b></div>
             </v-flex>
             <!-- Si tiene el permiso enfermeria -->
-            <!-- <v-flex @click="cargarPaciente(paciente)" v-else>
-              <div>Cama: <b>{{ paciente.cama }}</b></div>
-              <div>Nombre: <b>{{ paciente.nombre }}</b></div>
-            </v-flex> -->
+            <v-flex v-else>
+              <div>Cama: <b>{{ paciente.data.cama }}</b></div>
+              <div>Nombre: <b>{{ paciente.data.nombre }}</b></div>
+            </v-flex>
           </v-layout>
           <v-layout>
             <pase v-if="user.role === 'doctor'"
@@ -37,8 +37,7 @@ export default {
     return {
       dialog_pase: false,
       motivo: '',
-      class_boton_disable: '',
-      paciente: {}
+      class_boton_disable: ''
     }
   },
   computed: {
@@ -51,10 +50,9 @@ export default {
   },
   methods: {
     cargarPaciente (paciente) {
-      this.$store.commit('setShowPanelCentral', paciente.id)
-      this.$store.commit('setPacienteId', paciente.id)
+      this.$store.commit('setPacienteSeleccionado', paciente)
 
-      this.$store.commit('setAbrirNuevosTratamientos')
+      // this.$store.commit('setAbrirNuevosTratamientos')
     },
   },
   components: {

@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Lista from '../pacients/ListaDesktop.vue'
-import NuevoPaciente from '../pacients/NuevoPacienteDesktop.vue'
+import Lista from '../pacientes/ListaDesktop.vue'
+import NuevoPaciente from '../pacientes/NuevoPacienteDesktop.vue'
 
 export default {
   computed: {

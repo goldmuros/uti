@@ -7,6 +7,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     pacientes: [],
+    pacienteSeleccionado: {
+      show: false,
+      data: {}
+    },
     user: {
       role: 'doctor',
       name: 'Bel'
@@ -23,9 +27,26 @@ export default new Vuex.Store({
     },
     getPacientes: state => {
       return state.pacientes
+    },
+    getShowPacienteSeleccionado: state => {
+      return state.pacienteSeleccionado.show
+    },
+    getDataPacienteSeleccionado: state => {
+      return state.pacienteSeleccionado.data
     }
   },
   mutations: {
+    setPacienteSeleccionado (state, payload) {
+      if (state.pacienteSeleccionado.data.id != payload.id) {
+        state.pacienteSeleccionado.show = true
+        state.pacienteSeleccionado.data = payload.data
+        state.pacienteSeleccionado.id = payload.id
+      } else {
+        state.pacienteSeleccionado.show = false
+        state.pacienteSeleccionado.data = {}
+        state.pacienteSeleccionado.id = ''
+      }
+    },
     setMediaQuery (state, mediaQuery) {
       state.mediaQuery = mediaQuery
     },
@@ -33,10 +54,7 @@ export default new Vuex.Store({
       state.pacientes.push(payload)
     },
     deletePaciente (state, payload) {
-      // Mostrar todos los índices, incluyendo los eliminados
       state.pacientes.find((paciente, index) => {
-
-        // Eliminar el elemento 5 en la primera iteración
         if (paciente.id === payload.id) {
           state.pacientes.splice(index, 1)
         }
