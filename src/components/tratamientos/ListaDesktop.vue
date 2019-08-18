@@ -1,9 +1,11 @@
 <template>
   <v-list id="lista-tratamientos" two-line class="capa-scroll">
-    <v-list-tile v-for="(tratamiento, index) in tratamientosFiltroDia" 
-                :key="index"
+    <v-list-tile 
                 class="caja mt-1"
-                :class="class_tratamiento(tratamiento.estado)">
+                :class="class_tratamiento(tratamiento.estado)"
+                v-for="(tratamiento, index) in tratamientosFiltroDia"
+                :key="index"
+    >
       <v-list-tile-content>
         <v-list-tile-title>{{ tratamiento.nombre }}</v-list-tile-title>
         <v-list-tile-title>{{ tratamiento.dosis }}</v-list-tile-title>
@@ -15,14 +17,16 @@
                  slot="activator"
                  class="activar mt-2"
                  v-if="tratamiento.estado === 'A'"
-                 @click="setSuspender(tratamiento)">
+                 @click="setSuspender(tratamiento)"
+          >
             Suspender
           </v-btn>
           <v-btn light
                  slot="activator"
                  class="activar mt-2"
                  v-else
-                 @click="setSuspender(tratamiento)">
+                 @click="setSuspender(tratamiento)"
+          >
             Activar
           </v-btn>
           <span v-if="tratamiento.estado === 'A'">Suspender tratamiento</span>

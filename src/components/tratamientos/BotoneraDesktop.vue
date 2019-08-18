@@ -4,35 +4,41 @@
       <!-- Tratamientos Frecuentes -->
       <v-tooltip top>
         <!-- <v-btn fab small dark class="indigo" slot="activator" @click="abrirTratamientosFrecuentes('ver')"> -->
-        <v-btn fab
-               small
-               dark
-               class="indigo"
-               slot="activator">
+        <v-btn 
+          fab
+          small
+          dark
+          class="indigo"
+          slot="activator"
+        >
           <v-icon dark>replay</v-icon>
         </v-btn>
         <span>Ver Tratamientos Frecuentes</span>
       </v-tooltip>
       <!-- Repetir Tratamientos -->
       <v-tooltip top>
-        <v-btn fab
-               small
-               dark
-               class="indigo"
-               slot="activator"
-               @click="dialog_calendario = true">
+        <v-btn 
+          fab
+          small
+          dark
+          class="indigo"
+          slot="activator"
+          @click="dialog_calendario = true"
+        >
           <v-icon dark>date_range</v-icon>
         </v-btn>
         <span>Ver calendario de tratamientos</span>
       </v-tooltip>
       <!-- Nuevos Tratamientos -->
       <v-tooltip top>
-        <v-btn fab
-               small
-               dark
-               class="indigo"
-               slot="activator"
-               @click="dialog_nuevo_tratamiento = true">
+        <v-btn
+          fab
+          small
+          dark
+          class="indigo"
+          slot="activator"
+          @click="dialog_nuevo_tratamiento = true"
+        >
           <v-icon dark>add</v-icon>
         </v-btn>
         <span>Nuevo tratamiento</span>
@@ -40,7 +46,8 @@
 
       <v-dialog
         v-model="dialog_calendario"
-        max-width="35%">
+        max-width="35%"
+      >
         <DialogCalendario
           @close-dialog="closeDialog">
         </DialogCalendario>
@@ -48,7 +55,8 @@
    
       <v-dialog
         v-model="dialog_nuevo_tratamiento"
-        max-width="50%">
+        max-width="50%"
+      >
         <DialogNuevoTratamiento
           @close-dialog="closeDialog"
           @open-dialog="openDialog">
@@ -57,7 +65,8 @@
 
       <v-dialog
         v-model="dialog_error_nuevo_tratamiento"
-        max-width="50%">
+        max-width="50%"
+      >
         <DialogErrorNuevoTratamiento 
           @close-dialog="closeDialog"
         ></DialogErrorNuevoTratamiento>
@@ -65,12 +74,12 @@
 
       <v-dialog
         v-model="dialog_error_firebase"
-        max-width="50%">
+        max-width="50%"
+      >
         <DialogErrorFirebase 
           @close-dialog="closeDialog"
         ></DialogErrorFirebase>
       </v-dialog>
-      
 
       <!-- Dialog Repetir Tratamientos -->
       <v-dialog v-model="dialog_repetir_tratamientos" max-width="75%">
@@ -112,19 +121,6 @@ export default {
     }
   },
   computed: {
-    validarSeleccionTratamientos () {
-      // let paciente = this.$store.getters.getPaciente
-      // let tratamientos = paciente.tratamientos.filter((tratamiento) => {
-      //   return tratamiento.repetir === true
-      // })
-
-      // if (tratamientos.length > 0) {
-      //   this.class_boton_disable = ''
-      //   return true
-      // }
-
-      return false
-    },
     validarSeleccionTratamientosFrecuentes () {
       // let tratamientosFrecuentes = this.$store.getters.getTratamientosFrecuentes.filter((tratamientoFrecuente) => {
       //   return tratamientoFrecuente.seleccionarFrecuente === true
@@ -170,16 +166,16 @@ export default {
     // diasConTratamientos: dia => diasTratamiento.indexOf(dia) !== -1,
     closeDialog (dialog) {
       switch (dialog) {
-        case 0:
+        case 0: // Nuevo Tratamitneo
           this.dialog_nuevo_tratamiento = false
           break
-        case 1:
+        case 1: // Error Nuevo Tratamiento
           this.dialog_error_nuevo_tratamiento = false
           break
-        case 2:
+        case 2: //Error Firebase
           this.dialog_error_firebase = false
           break
-        case 3:
+        case 3: // Calendario
           this.dialog_calendario = false
           break
       }
@@ -202,32 +198,6 @@ export default {
       this.diasRepetirTratamientos = this.$store.getters.getDiasTratamiento
       this.dialog_repetir_tratamientos = !this.dialog_repetir_tratamientos
     },
-    seleccionarTodosTratamientos () {
-      this.seleccionar = !this.seleccionar
-      let paciente = this.$store.getters.getPaciente
-
-      let tratamientos = paciente.tratamientos.filter((tratamiento) => {
-        return tratamiento.dia === this.fechaRepetirTratamientos
-      })
-
-      tratamientos.forEach((tratamiento) => {
-        tratamiento.repetir = this.seleccionar
-      })
-    },
-    seleccionarTratamiento (index) {
-      this.tratamientosAnteriores[index].repetir = !this.tratamientosAnteriores[index].repetir
-
-      let paciente = this.$store.getters.getPaciente
-      let tratamientosSeleccionados = paciente.tratamientos.filter((tratamiento) => {
-        return tratamiento.repetir === true
-      })
-
-      if (this.tratamientosAnteriores.length === tratamientosSeleccionados.length) {
-        this.seleccionar = true
-      } else {
-        this.seleccionar = false
-      }
-    },
     mostrarTratamientosAnteriores () {
       let paciente = this.$store.getters.getPaciente
 
@@ -236,40 +206,6 @@ export default {
 
         return tratamiento.dia === this.fechaRepetirTratamientos
       })
-    },
-    agregarTratamientos () {
-      let paciente = this.$store.getters.getPaciente
-
-      let tratamientos = paciente.tratamientos.filter((tratamiento) => {
-        return tratamiento.repetir === true
-      })
-
-      tratamientos.some((tratamiento) => {
-        let tratamientoRepetido = {
-          nombre: tratamiento.nombre,
-          dosis: tratamiento.dosis,
-          frecuencia: tratamiento.frecuencia
-        }
-
-        if (!this.$store.getters.existeTratamiento(tratamientoRepetido.nombre)) {
-          this.$store.commit('crearTratamiento', tratamientoRepetido)
-
-          tratamiento.repetir = false
-        } else {
-          this.dialog_error_nuevo_tratamiento = !this.dialog_error_nuevo_tratamiento
-
-          tratamientos.forEach((tratamiento) => {
-            tratamiento.repetir = !tratamiento.repetir
-          })
-
-          return true
-        }
-      })
-
-      // Se limpia el array para proximos pacientes
-      this.tratamientosAnteriores = []
-      this.seleccionar = !this.seleccionar
-      this.dialog_repetir_tratamientos = !this.dialog_repetir_tratamientos
     },
     abrirTratamientosFrecuentes (tipo) {
       if (tipo === 'agregar') {

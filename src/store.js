@@ -146,6 +146,19 @@ export default new Vuex.Store({
         })
       })
     },
+    addManyTratamientos ({dispatch}, tratamientos) {
+      // Se agregan varios tratamientos, llama individualmente a addTratamiento
+      return new Promise((resolve, reject) => {
+        tratamientos.forEach(tratamiento => {
+          dispatch('addTratamiento', tratamiento)
+          .catch(() => {
+            return reject()
+          })
+        })
+
+        return resolve()
+      })
+    },
     addTratamiento ({commit, getters}, payload) {
       return new Promise((resolve, reject) => {
         let tratamiento = {
@@ -154,7 +167,6 @@ export default new Vuex.Store({
           frecuencia: payload.frecuencia,
           dia: fechaActual(),
           estado: 'A'
-          // repetir: payload.repetir
         }
 
         let paciente = getters.getPacienteSeleccionado

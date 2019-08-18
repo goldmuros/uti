@@ -56,8 +56,9 @@
           dark
           small
           class="primary"
-          slot="activator">
-          <!-- @click="abrirRepetirTratamientos"> -->
+          slot="activator"
+          @click="dialog_repetir_tratamientos = true"
+        >
           <v-icon dark>autorenew</v-icon>
         </v-btn>
         <span>Repetir Tratamientos</span>
@@ -70,7 +71,8 @@
           small
           class="red"
           slot="activator"
-          @click="$emit('close-dialog', 0)">
+          @click="$emit('close-dialog', 0)"
+        >
           <v-icon dark>close</v-icon>
         </v-btn>
         <span>Cerrar Ventana</span>
@@ -91,16 +93,27 @@
         <span>Agregar Tratamientos</span>
       </v-tooltip>
     </v-card-actions>
+
+    <!-- Dialog Repetir Tratamientos -->
+    <v-dialog v-model="dialog_repetir_tratamientos" max-width="75%">
+      <DialogRepetirTratamiento
+        @close-dialog="closeDialog"
+        @open-dialog="openDialog">
+      </DialogRepetirTratamiento>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
+import DialogRepetirTratamiento from './DialogRepetirTratamiento.vue'
+
 export default {
   data () {
     return {
       nombre: '',
       dosis: '',
-      frecuencia: ''
+      frecuencia: '',
+      dialog_repetir_tratamientos: false
     }
   },
   computed: {
@@ -112,6 +125,20 @@ export default {
     }
   },
   methods: {
+    closeDialog (dialog) {
+      switch (dialog) {
+        case 4: // Repetir Tratamiento
+          this.dialog_repetir_tratamientos = false
+          break
+      }
+    },
+    openDialog (dialog) {
+      switch (dialog) {
+        case 1: // Error de tratamiento repetido
+          this.$emit('open-dialog', 1)
+          break
+      }
+    },
     crearTratamiento () {
       if (!this.$store.getters.existeTratamiento(this.nombre)) {
         let tratamiento = {
@@ -136,6 +163,9 @@ export default {
         this.$emit('open-dialog', 1)
       }
     }
+  },
+  components: {
+    DialogRepetirTratamiento
   }
 }
 </script>
