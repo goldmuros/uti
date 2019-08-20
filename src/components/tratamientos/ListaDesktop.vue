@@ -1,10 +1,10 @@
 <template>
   <v-list id="lista-tratamientos" two-line class="capa-scroll">
     <v-list-tile 
-                class="caja mt-1"
-                :class="class_tratamiento(tratamiento.estado)"
-                v-for="(tratamiento, index) in tratamientosFiltroDia"
-                :key="index"
+      class="caja mt-1"
+      :class="class_tratamiento(tratamiento.estado)"
+      v-for="(tratamiento, index) in tratamientosFiltroDia"
+      :key="index"
     >
       <v-list-tile-content>
         <v-list-tile-title>{{ tratamiento.nombre }}</v-list-tile-title>
@@ -13,19 +13,21 @@
       </v-list-tile-content>
       <v-list-tile-action v-if="user.role === 'doctor'">
         <v-tooltip left>
-          <v-btn light
-                 slot="activator"
-                 class="activar mt-2"
-                 v-if="tratamiento.estado === 'A'"
-                 @click="setSuspender(tratamiento)"
+          <v-btn
+            light
+            slot="activator"
+            class="activar mt-2"
+            v-if="tratamiento.estado === 'A'"
+            @click="setSuspender(tratamiento)"
           >
             Suspender
           </v-btn>
-          <v-btn light
-                 slot="activator"
-                 class="activar mt-2"
-                 v-else
-                 @click="setSuspender(tratamiento)"
+          <v-btn
+            light
+            slot="activator"
+            class="activar mt-2"
+            v-else
+            @click="setSuspender(tratamiento)"
           >
             Activar
           </v-btn>
@@ -40,9 +42,6 @@
 <script>
 export default {
   computed: {
-    paciente () {
-      return this.$store.getters.getPaciente
-    },
     tratamientosFiltroDia () {
       // Carga el array para la lista de tratamientos del dia seleccionado
       let diaSeleccionado = this.$store.getters.getFechaSeleccionada

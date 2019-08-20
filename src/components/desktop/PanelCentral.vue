@@ -15,11 +15,9 @@
 
           <v-tab-item :value="'tab-tratamientos'">
             <Tratamientos></Tratamientos>
-            <br>
-            <!-- <botones-tratamientos v-if="permiso === 'doctor'"></botones-tratamientos> -->
           </v-tab-item>
           <v-tab-item :value="'tab-parametros'">
-            <!-- <lista-parametros></lista-parametros> -->
+            <Parametros></Parametros>
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -29,8 +27,7 @@
 
 <script>
 import Tratamientos from '../tratamientos/Tratamientos.vue'
-// import BotonesTratamientos from './Tratamientos/BotonesTratamientos.vue'
-// import ListaParametros from './Parametros/ListaParametros.vue'
+import Parametros from '../parametros/Parametros.vue'
 
 export default {
   computed: {
@@ -42,9 +39,8 @@ export default {
     }
   },
   components: {
-    Tratamientos: Tratamientos
-    // BotonesTratamientos: BotonesTratamientos,
-    // ListaParametros: ListaParametros
+    Tratamientos,
+    Parametros
   }
 }
 </script>

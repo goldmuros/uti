@@ -58,19 +58,26 @@ export default new Vuex.Store({
       return state.fechaSeleccionada
     },
     getTratamientos: (state) => (dia) => {
-      let tratamientos = state.pacienteSeleccionado.data.tratamientos
+      let tratamientos = []
 
-      return tratamientos.filter((tratamiento) => {
-        return tratamiento.dia === dia
-      })
+      if (state.pacienteSeleccionado.data.tratamientos.length > 0) {
+        state.pacienteSeleccionado.data.tratamientos.filter((tratamiento) => {
+          if(tratamiento.dia === dia)
+            tratamientos.push(tratamiento)
+        })
+      }
+
+      return tratamientos
     },
     getDiasTratamientos: (state) => {
       let tratamientos = state.pacienteSeleccionado.data.tratamientos
 
-      tratamientos.forEach((tratamiento) => {
-        if (state.diasTratamiento.includes(tratamiento.dia) === false)
-          state.diasTratamiento.push(tratamiento.dia)
-      })
+      if (tratamientos.length > 0) {
+        tratamientos.forEach((tratamiento) => {
+          if (state.diasTratamiento.includes(tratamiento.dia) === false)
+            state.diasTratamiento.push(tratamiento.dia)
+        })
+      }
 
       return state.diasTratamiento
     },
@@ -83,6 +90,45 @@ export default new Vuex.Store({
         
         return false
       })
+    },
+    getUltimoParametro: (state) => {
+      let parametros = []
+
+      state.pacienteSeleccionado.data.parametros.forEach((parametro) => {
+        let ultimoParametro = parametro.valores[parametro.valores.length - 1]
+
+        let param = {
+          nombre: parametro.nombre,
+          valor: ultimoParametro.valor,
+          fecha: ultimoParametro.dia,
+          hora: ultimoParametro.hora,
+          clase: '',
+          valores: parametro.valores
+        }
+
+        // Se asigna un color dependiendo el parámetro
+        switch (parametro.nombre) {
+          case 'Presión Arterial':
+            param.clase = 'presionArterial'
+            break
+          case 'Temperatura':
+            param.clase = 'temperatura'
+            break
+          case 'Diuresis':
+            param.clase = 'diuresis'
+            break
+          case 'Frecuencia Cardiaca':
+            param.clase = 'frecuenciaCardiaca'
+            break
+          case 'Frecuencia Respiratoria':
+            param.clase = 'frecuenciaRespiratoria'
+            break
+        }
+
+        parametros.push(param)
+      })
+
+      return parametros
     }
   },
   mutations: {
@@ -187,7 +233,7 @@ export default new Vuex.Store({
         })
       })
     },
-    addPaciente ({commit,}, payload) {
+    addPaciente ({commit}, payload) {
       return new Promise((resolve, reject) => {
         let paciente = {
           cama: payload.cama,
@@ -236,12 +282,10 @@ export default new Vuex.Store({
           .then((newDoc) => {
             let nuevoPaciente = {
               'id': newDoc.id,
-              'data': {
-                'cama': paciente.cama,
-                'nombre': paciente.nombre
-              }
+              'data': paciente
             }
             commit('setPaciente', nuevoPaciente)
+            commit('setPacienteSeleccionado', nuevoPaciente)
             return resolve()
         })
         .catch(() => {
