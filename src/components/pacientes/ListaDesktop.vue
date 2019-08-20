@@ -51,9 +51,7 @@ export default {
   methods: {
     cargarPaciente (paciente) {
       this.$store.commit('setPacienteSeleccionado', paciente)
-
-      // this.$store.commit('setAbrirNuevosTratamientos')
-    },
+    }
   },
   components: {
     Pase

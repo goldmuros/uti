@@ -1,19 +1,18 @@
 <template>
   <v-container class="capa-lista-parametros">
-    <v-layout row>
-      <v-flex md12>
-        <Lista></Lista>
-      </v-flex>
-    </v-layout>
+    <Lista></Lista>
+    <Botonera></Botonera>
   </v-container>
 </template>
 
 <script>
 import Lista from './ListaDesktop.vue'
+import Botonera from './BotoneraDesktop.vue'
 
 export default {
   components: {
-    Lista
+    Lista,
+    Botonera
   }  
 }
 </script>

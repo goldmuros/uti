@@ -4,15 +4,23 @@ import { db } from './config/config-firebase.js'
 
 let fechaActual = () => {
   let date = new Date(),
-    month = '' + (date.getMonth() + 1),
-    day = '' + date.getDate(),
-    year = date.getFullYear();
+    mes = '' + (date.getMonth() + 1),
+    dia = '' + date.getDate(),
+    ano = date.getFullYear(),
+    horas = '' + date.getHours(),
+    minutos = '' + date.getMinutes()
 
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
+  if (mes.length < 2) mes = '0' + mes
+  if (dia.length < 2) dia = '0' + dia
+  if (horas.length < 2) horas = '0' + horas
+  if (minutos.length < 2) minutos = '0' + minutos
 
-  return [year, month, day].join('-');
+  return {
+    'fecha': [ano, mes, dia].join('-'),
+    'hora': [horas, minutos].join(':')
+  }
 }
+
 
 Vue.use(Vuex)
 
@@ -24,7 +32,7 @@ export default new Vuex.Store({
       data: {}
     },
     user: {
-      role: 'doctor',
+      role: 'enfermeria',
       name: 'Bel'
     },
     activePage: '',
@@ -45,6 +53,9 @@ export default new Vuex.Store({
     getShowPacienteSeleccionado: state => {
       return state.pacienteSeleccionado.show
     },
+    getIdPacienteSeleccionado: state => {
+      return state.pacienteSeleccionado.id
+    },
     getDataPacienteSeleccionado: state => {
       return state.pacienteSeleccionado.data
     },
@@ -53,7 +64,7 @@ export default new Vuex.Store({
     },
     getFechaSeleccionada: state => {
       if (state.fechaSeleccionada === '')
-        state.fechaSeleccionada = fechaActual()
+        state.fechaSeleccionada = fechaActual().fecha
 
       return state.fechaSeleccionada
     },
@@ -165,6 +176,9 @@ export default new Vuex.Store({
     },
     setFechaSeleccionada (state, fecha) {
       state.fechaSeleccionada = fecha
+    },
+    setParametros (state, payload) {
+      state.pacienteSeleccionado.data.parametros = payload
     }
   },
   actions: {
@@ -248,31 +262,31 @@ export default new Vuex.Store({
             {
               nombre: 'Presión Arterial',
               valores: [
-                {fecha: '', valor: { tam: 0, ps: 0, pd: 0 }}
+                {fecha: '', hora: '', valor: { tam: 0, ps: 0, pd: 0 }}
               ]
             },
             {
               nombre: 'Temperatura',
               valores: [
-                {fecha: '', valor: 0}
+                {fecha: '', hora: '', valor: 0}
               ]
             },
             {
               nombre: 'Diuresis',
               valores: [
-                {fecha: '', valor: 0}
+                {fecha: '', hora: '', valor: 0}
               ]
             },
             {
               nombre: 'Frecuencia Cardiaca',
               valores: [
-                {fecha: '', valor: 0}
+                {fecha: '', hora: '', valor: 0}
               ]
             },
             {
               nombre: 'Frecuencia Respiratoria',
               valores: [
-                {fecha: '', valor: 0}
+                {fecha: '', hora: '', valor: 0}
               ]
             }
           ]
@@ -293,14 +307,17 @@ export default new Vuex.Store({
         })
       })
     },
-    getPacientes ({state}) {
+    getPacientes ({commit}) {
       db.collection('pacientes').get().then((pacientes) => {
         pacientes.docs.forEach(paciente => {
           // Se obtienen los que tienen el ESTADO del pase es FALSE, o sea, no se los dieron de baja en la sala
           if (!paciente.data().pase.estado) {
-            state.pacientes.push({
+            let nuevoPaciente = {
               'id': paciente.id,
-              'data': paciente.data()})
+              'data': paciente.data()
+            }
+
+            commit('setPaciente', nuevoPaciente)
           }
         })        
       })
@@ -312,6 +329,67 @@ export default new Vuex.Store({
       })
       .then(() => {
         commit('deletePaciente', paciente)
+      })
+    },
+    addParametros ({commit, getters}, payload) {
+      return new Promise((resolve, reject) => {
+        let parametros = payload.parametros
+
+        parametros.forEach(parametro => {
+          if (parametro.valores[0].fecha == '' &&
+              parametro.valores[0].hora == '')
+            parametro.valores.shift() // se elimina el primer valor si esta vacio
+
+          let valor = {// un valor para el tratamiento
+            fecha: fechaActual().fecha,
+            hora: fechaActual().hora,
+            valor: {}
+          }
+
+          switch (parametro.nombre) {
+            case 'Presión Arterial': {
+              let presionMedia = payload.presionDiastolica + (payload.presionSistolica - payload.presionDiastolica) / 3
+              valor.valor = {
+                tam: presionMedia,
+                ps: payload.presionSistolica,
+                pd: payload.presionDiastolica
+              }
+              break
+            }
+            case 'Temperatura': {
+              valor.valor = payload.temperatura
+              break
+            }
+            case 'Diuresis': {
+              valor.valor = payload.diuresis
+              break
+            }
+            case 'Frecuencia Cardiaca': {
+              valor.valor = payload.frecuenciaCardiaca
+              break
+            }
+            case 'Frecuencia Respiratoria': {
+              valor.valor = payload.frecuenciaRespiratoria
+              break
+            }
+          }
+          
+          parametro.valores.push(valor)
+        })
+
+        let pacienteId = getters.getIdPacienteSeleccionado
+
+        // Se busca el paciente
+        db.collection('pacientes').doc(pacienteId).update({
+          'parametros': parametros
+        })
+        .then(() => {
+          commit('setParametros', parametros)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
       })
     }
   }
