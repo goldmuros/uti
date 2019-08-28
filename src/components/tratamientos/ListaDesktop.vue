@@ -11,7 +11,7 @@
         <v-list-tile-title>{{ tratamiento.dosis }}</v-list-tile-title>
         <v-list-tile-title>{{ tratamiento.frecuencia }}</v-list-tile-title>
       </v-list-tile-content>
-      <v-list-tile-action v-if="user.role === 'doctor'">
+      <v-list-tile-action v-if="role === 'doctor'">
         <v-tooltip left>
           <v-btn
             light
@@ -47,8 +47,8 @@ export default {
       let diaSeleccionado = this.$store.getters.getFechaSeleccionada
       return this.$store.getters.getTratamientos(diaSeleccionado)
     },
-    user () {
-      return this.$store.getters.getUser
+    role () {
+      return this.$store.getters.getUserRole
     }
   },
   methods: {

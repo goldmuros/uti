@@ -8,7 +8,7 @@
         <v-container fluid grid-list-xs>
           <v-layout row wrap>
             <!-- Si tiene el permiso doctor -->
-            <v-flex v-if="user.role === 'doctor'">
+            <v-flex v-if="role === 'doctor'">
               <div>Cama: <b>{{ paciente.data.cama }}</b></div>
               <div>Nombre: <b>{{ paciente.data.nombre }}</b></div>
             </v-flex>
@@ -19,7 +19,7 @@
             </v-flex>
           </v-layout>
           <v-layout>
-            <pase v-if="user.role === 'doctor'"
+            <pase v-if="role === 'doctor'"
               v-bind:paciente="paciente">
             </pase>
           </v-layout>
@@ -44,8 +44,8 @@ export default {
     pacientes () {
       return this.$store.getters.getPacientes
     },
-    user () {
-      return this.$store.getters.getUser
+    role () {
+      return this.$store.getters.getUserRole
     }
   },
   methods: {

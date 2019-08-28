@@ -1,11 +1,22 @@
 <template>
   <v-app>
-    <v-toolbar dark dense class="light-green darken-3">
+    <v-toolbar
+      dark
+      dense
+      class="light-green darken-3"
+    >
       <v-toolbar-title>{{title}}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="logueado">
         <v-tooltip left>
-          <v-btn fab small dark class="darken-3" slot="activator" @click="logout">
+          <v-btn
+            fab
+            small
+            dark
+            class="darken-3"
+            slot="activator"
+            @click="logout"
+          >
             <v-icon dark>power_settings_new</v-icon>
           </v-btn>
           <span>Salir del sistema</span>
@@ -48,9 +59,6 @@ export default {
       mediaQuery = 'tablet'
 
     this.$store.commit('setMediaQuery', mediaQuery)
-    this.$store.dispatch('getPacientes').catch(() => {
-      console.log('Hay un problema con Firebase :<')
-    })
   }
 }
 </script>

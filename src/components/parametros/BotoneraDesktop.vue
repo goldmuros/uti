@@ -23,7 +23,7 @@
           dark
           class="indigo"
           slot="activator"
-          v-if="user.role === 'enfermeria'"
+          v-if="role === 'enfermeria'"
           @click="dialog_nuevos_parametros = true"
         >
           <v-icon dark>add</v-icon>
@@ -34,7 +34,7 @@
       <v-dialog
         v-model="dialog_nuevos_parametros"
         max-width="75%"
-        v-if="user.role === 'enfermeria'"
+        v-if="role === 'enfermeria'"
       >
         <DialogNuevoParametros
           @close-dialog="closeDialog"
@@ -66,8 +66,8 @@ export default {
     }
   },
   computed: {
-    user () {
-      return this.$store.getters.getUser
+    role () {
+      return this.$store.getters.getUserRole
     }
   },
   methods: {

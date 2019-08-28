@@ -8,7 +8,7 @@
 
     <Lista></Lista>
     <br/>
-    <Botonera v-if="user.role === 'doctor'"></Botonera>
+    <Botonera v-if="role === 'doctor'"></Botonera>
   </v-container>
 </template>
 
@@ -21,8 +21,8 @@ export default {
     fechaSeleccionado () {
       return this.$store.getters.getFechaSeleccionada
     },
-    user () {
-      return this.$store.getters.getUser
+    role () {
+      return this.$store.getters.getUserRole
     }
   },
   components: {

@@ -28,11 +28,17 @@ export default new Vuex.Store({
   state: {
     pacientes: [],
     pacienteSeleccionado: {
+      id: '',
       show: false,
       data: {}
     },
-    user: {
-      role: 'enfermeria',
+    users: [],
+    userSelected: {
+      id: '',
+      data: {}
+    },
+    userLogin: {
+      role: 'supervisor',
       name: 'Bel'
     },
     activePage: '',
@@ -41,11 +47,21 @@ export default new Vuex.Store({
     diasTratamiento: []
   },
   getters: {
+    getValidarUsuario: (state) => (payload) => {
+      let user = state.users.find((usuario) => {
+        if (usuario.name === payload.name && usuario.password === payload.password) {
+          state.userLogin = usuario
+
+          return true
+        }
+
+        return false
+      })
+
+      return user
+    },
     getActivePage: state => {
       return state.activePage
-    },
-    getUser: state => {
-      return state.user
     },
     getPacientes: state => {
       return state.pacientes
@@ -140,6 +156,18 @@ export default new Vuex.Store({
       })
 
       return parametros
+    },
+    getUserRole: state => {
+      return state.userLogin.role
+    },
+    getIdUserSeleccionado: state => {
+      return state.userSelected.id
+    },
+    getDataUserSeleccionado: state => {
+      return state.userSelected.data
+    },
+    getUsers: state => {
+      return state.users
     }
   },
   mutations: {
@@ -179,6 +207,19 @@ export default new Vuex.Store({
     },
     setParametros (state, payload) {
       state.pacienteSeleccionado.data.parametros = payload
+    },
+    setUsuarioSeleccionado (state, payload) {
+      if (state.userSelected.id !== payload.id) {
+        state.userSelected.data = payload.data
+        state.userSelected.id = payload.id
+      }
+    },
+    setUser (state, payload) {
+      state.users.push(payload)
+    },
+    setUpdateUserSeleccionado (state, payload) {
+      if (state.userSelected.id === payload.id)
+        state.userSelected.data = payload.data
     }
   },
   actions: {
@@ -385,6 +426,57 @@ export default new Vuex.Store({
         })
         .then(() => {
           commit('setParametros', parametros)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    getUsers ({commit}) {
+      db.collection('usuarios').get().then((users) => {
+        users.docs.forEach(user => {
+          let newUser = {
+            'id': user.id,
+            'data': user.data()
+          }
+
+          commit('setUser', newUser)
+        })        
+      })
+    },
+    addUsuario ({commit}, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection('usuarios').add(payload)
+        .then((newDoc) => {
+          let usuario = {
+            'id': newDoc.id,
+            'data': payload
+          }
+          // commit('setUsuario', usuario)
+          commit('setUsuarioSeleccionado', usuario) // Muestra el detalle del User
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    updateUsuario ({commit, getters}, payload) {
+      return new Promise((resolve, reject) => {
+        let userId = getters.getIdUserSeleccionado
+
+        // Update del Usuario
+        db.collection('usuarios').doc(userId).update(
+          payload
+        )
+        .then(() => {
+          let user = {
+            id: userId,
+            data: payload
+          }
+
+          commit('setUpdateUserSeleccionado', user)
           return resolve()
         })
         .catch(() => {
