@@ -48,12 +48,24 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <!-- Eliminar usuario -->
+        <v-tooltip top>
+          <v-btn
+            fab
+            dark
+            slot="activator"
+            @click="dialog_delete_usuario = true"
+          >
+            <v-icon dark>delete_forever</v-icon>
+          </v-btn>
+          <span>Eliminar Usuario</span>
+        </v-tooltip>
         <!-- Cerrar -->
         <v-tooltip top>
           <v-btn
             fab
             dark
-            class="red"
+            class="red ml-4"
             slot="activator"
             @click="$emit('close-dialog', 9)"
           >
@@ -88,24 +100,33 @@
 
     <v-dialog
       max-width="50%"
-      v-model="dialog_error_firebase"
+      v-model="dialog_error_operacion"
     >
-      <DialogErrorFirebase 
-        @close-dialog="closeDialog"
-      ></DialogErrorFirebase>
+      <DialogErrorOperacion @close-dialog="closeDialog"/>
+    </v-dialog>
+
+    <v-dialog
+      max-width="50%"
+      v-model="dialog_delete_usuario"
+    >
+      <DialogDeleteUsuario
+        @open-dialog="openDialog"
+        @close-dialog="closeDialog"/>
     </v-dialog>
   </div>
 </template>
 
 <script>
 import DialogOperacionCorrecta from './DialogOperacionCorrecta.vue'
-import DialogErrorFirebase from './DialogErrorFirebase.vue'
+import DialogErrorOperacion from './DialogErrorOperacion.vue'
+import DialogDeleteUsuario from './DialogDeleteUsuario.vue'
 
 export default {
   data () {
     return {
       dialog_operacion_correcta: false,
-      dialog_error_firebase: false,
+      dialog_error_operacion: false,
+      dialog_delete_usuario: false,
       showPassword: false,
       roles: ['Doctor', 'Enfermeria'],
       nombreRule: [
@@ -136,6 +157,19 @@ export default {
         case 7: // Operacion correcta
           this.dialog_operacion_correcta = false
           break
+        case 10: // Delete usuario
+          this.dialog_delete_usuario = false
+          break
+      }
+    },
+    openDialog (dialog) {
+      switch (dialog) {
+        case 2:
+          this.dialog_error_operacion = true
+          break
+        case 7:
+          this.dialog_operacion_correcta = true
+          break
       }
     },
     updateUsuario () {
@@ -152,7 +186,8 @@ export default {
   },
   components: {
     DialogOperacionCorrecta,
-    DialogErrorFirebase
+    DialogErrorOperacion,
+    DialogDeleteUsuario
   }
 }
 </script>

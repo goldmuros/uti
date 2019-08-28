@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="red--text headline">Usuario guardado</span>
+      <span class="red--text headline">Operación correcta</span>
     </v-card-title>
     <v-card-text>
-      Se ha guardado correctamente el usuario
+      Se ha realizado correctamente la operación
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>

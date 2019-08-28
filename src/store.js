@@ -220,6 +220,13 @@ export default new Vuex.Store({
     setUpdateUserSeleccionado (state, payload) {
       if (state.userSelected.id === payload.id)
         state.userSelected.data = payload.data
+    },
+    setDeleteUser (state, userId) {
+      state.users.find((user, index) => {
+        if (user.id === userId) {
+          state.users.splice(index, 1)
+        }
+      })
     }
   },
   actions: {
@@ -477,6 +484,22 @@ export default new Vuex.Store({
           }
 
           commit('setUpdateUserSeleccionado', user)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    deleteUsuario ({commit, getters}) {
+      return new Promise((resolve, reject) => {
+        let userId = getters.getIdUserSeleccionado
+
+        // Update del Usuario
+        db.collection('usuarios').doc(userId).delete()
+        .then(() => {
+
+          commit('setDeleteUser', userId)
           return resolve()
         })
         .catch(() => {

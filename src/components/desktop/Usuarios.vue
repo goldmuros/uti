@@ -38,7 +38,7 @@
       max-width="50%"
       v-model="dialog_error_firebase"
     >
-      <DialogErrorFirebase @close-dialog="closeDialog"/>
+      <DialogErrorOperacion @close-dialog="closeDialog"/>
     </v-dialog>
   </v-layout>
 </template>
@@ -46,7 +46,7 @@
 <script>
 import Lista from '../users/ListaDesktop.vue'
 import DialogNuevoUsuario from '../generales/dialogs/DialogNuevoUsuario.vue'
-import DialogErrorFirebase from '../generales/dialogs/DialogErrorFirebase.vue'
+import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
 import DialogUpdateUsuario from '../generales/dialogs/DialogUpdateUsuario.vue'
 
 
@@ -80,7 +80,7 @@ export default {
   components: {
     Lista,
     DialogNuevoUsuario,
-    DialogErrorFirebase,
+    DialogErrorOperacion,
     DialogUpdateUsuario
   }
 }

@@ -62,9 +62,7 @@
         v-model="dialog_error_firebase"
         max-width="50%"
       >
-        <DialogErrorFirebase 
-          @close-dialog="closeDialog"
-        ></DialogErrorFirebase>
+        <DialogErrorOperacion @close-dialog="closeDialog"/>
       </v-dialog>
     </v-flex>
   </v-layout>
@@ -73,7 +71,7 @@
 <script>
 import DialogNuevoTratamiento from '../generales/dialogs/DialogNuevoTratamiento.vue'
 import DialogErrorNuevoTratamiento from '../generales/dialogs/DialogErrorNuevoTratamiento.vue'
-import DialogErrorFirebase from '../generales/dialogs/DialogErrorFirebase.vue'
+import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
 import DialogCalendario from '../generales/dialogs/DialogCalendario.vue'
 
 export default {
@@ -119,7 +117,7 @@ export default {
   components: {
     DialogNuevoTratamiento,
     DialogErrorNuevoTratamiento,
-    DialogErrorFirebase,
+    DialogErrorOperacion,
     DialogCalendario
   }
 }

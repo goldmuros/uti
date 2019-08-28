@@ -46,9 +46,7 @@
         v-model="dialog_error_firebase"
         max-width="50%"
       >
-        <DialogErrorFirebase 
-          @close-dialog="closeDialog"
-        ></DialogErrorFirebase>
+        <DialogErrorOperacion @close-dialog="closeDialog"/>
       </v-dialog>
     </v-flex>
   </v-layout>
@@ -56,7 +54,7 @@
 
 <script>
 import DialogNuevoParametros from '../generales/dialogs/DialogNuevoParametros.vue'
-import DialogErrorFirebase from '../generales/dialogs/DialogErrorFirebase.vue'
+import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
 
 export default {
   data () {
@@ -91,7 +89,7 @@ export default {
   },
   components: {
     DialogNuevoParametros,
-    DialogErrorFirebase
+    DialogErrorOperacion
   }
 }
 </script>
