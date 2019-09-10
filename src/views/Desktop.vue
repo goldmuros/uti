@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="grid-list-md text-md-center">
     <!-- Admin Usuarios -->
-    <Usuarios v-if="role === 'supervisor'"/>
+    <Administracion v-if="role === 'supervisor'"/>
     <!-- Pacientes -->
     <v-layout row wrap v-else>
       <v-flex md3>
@@ -17,7 +17,7 @@
 <script>
 import Pacientes from '@/components/desktop/Pacientes.vue'
 import PanelCentral from '@/components/desktop/PanelCentral.vue'
-import Usuarios from '@/components/desktop/Usuarios.vue'
+import Administracion from '@/components/desktop/Administracion.vue'
 
 export default {
   computed: {
@@ -28,10 +28,13 @@ export default {
       return this.$store.getters.getUserRole
     }
   },
+  created () {
+    this.$store.dispatch('getTratamientosFrecuentes')
+  },
   components: {
     Pacientes,
     PanelCentral,
-    Usuarios
+    Administracion
   }
 }
 </script>

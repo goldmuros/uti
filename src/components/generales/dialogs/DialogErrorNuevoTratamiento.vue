@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="red--text headline">Tratamiento Repetido</span>
+      <span class="red--text headline">{{ texts.title }} Repetido</span>
     </v-card-title>
     <v-card-text>
-      El tratamiento ya fue ingresado para el día de hoy. Ingrese otro tratamiento.
+      {{ texts.body }}
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -24,3 +24,9 @@
     </v-card-actions>
   </v-card>
 </template>
+
+<script>
+export default {
+  props:['texts']
+}
+</script>

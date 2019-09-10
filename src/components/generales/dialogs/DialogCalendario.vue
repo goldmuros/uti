@@ -42,14 +42,10 @@
 
 <script>
 export default {
+  props: ['diasConTratamientos'],
   data () {
     return {
       fecha: ''
-    }
-  },
-  computed: {
-    diasConTratamientos () {
-      return this.$store.getters.getDiasTratamientos
     }
   },
   methods: {

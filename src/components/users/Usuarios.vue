@@ -36,7 +36,7 @@
 
     <v-dialog
       max-width="50%"
-      v-model="dialog_error_firebase"
+      v-model="dialog_error_operacion"
     >
       <DialogErrorOperacion @close-dialog="closeDialog"/>
     </v-dialog>
@@ -44,7 +44,9 @@
 </template>
 
 <script>
-import Lista from '../users/ListaDesktop.vue'
+import { closeDialog } from '@/utils/dialog-functions.js'
+
+import Lista from './ListaDesktop.vue'
 import DialogNuevoUsuario from '../generales/dialogs/DialogNuevoUsuario.vue'
 import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
 import DialogUpdateUsuario from '../generales/dialogs/DialogUpdateUsuario.vue'
@@ -54,24 +56,16 @@ export default {
   data () {
     return {
       dialog_nuevo_usuario: false,
-      dialog_error_firebase: false,
+      dialog_error_operacion: false,
       dialog_update_usuario: false,
       user: {}
     }
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 2: // Error Firebase
-          this.dialog_error_firebase = false
-          break
-        case 8: // Nuevo usuario
-          this.dialog_nuevo_usuario = false
-          break
-        case 9: // Update usuario
-          this.dialog_update_usuario = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openDialog () {
       this.dialog_update_usuario = true

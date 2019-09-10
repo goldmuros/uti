@@ -37,20 +37,21 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <!-- Tratamientos Frecuentes -->
-      <v-tooltip top>
+      <v-tooltip top v-if="!isFrecuente">
         <v-btn
           fab
           dark
           small
           class="primary"
-          slot="activator">
-          <!-- @click="abrirTratamientosFrecuentes('agregar')"> -->
+          slot="activator"
+          @click="dialog_list_tratamientos_frecuentes = true"
+        >
           <v-icon dark>replay</v-icon>
         </v-btn>
         <span>Tratamientos Frecuentes</span>
       </v-tooltip>
       <!-- Repetir Tratamientos -->
-      <v-tooltip top>
+      <v-tooltip top v-if="!isFrecuente">
         <v-btn
           fab
           dark
@@ -95,25 +96,61 @@
     </v-card-actions>
 
     <!-- Dialog Repetir Tratamientos -->
-    <v-dialog v-model="dialog_repetir_tratamientos" max-width="75%">
+    <v-dialog
+      max-width="75%"
+      v-model="dialog_repetir_tratamientos"
+      v-if="!isFrecuente && dialog_repetir_tratamientos"
+    >
       <DialogRepetirTratamiento
         @close-dialog="closeDialog"
-        @open-dialog="openDialog">
-      </DialogRepetirTratamiento>
+        @open-dialog="openDialog"
+      />
+    </v-dialog>
+
+    <!-- Tratamientos Frecuentes -->
+    <v-dialog
+      max-width="75%"
+      v-model="dialog_list_tratamientos_frecuentes"
+    >
+      <DialogListTratamientosFrecuentes
+        @close-dialog="closeDialog"
+        @open-dialog="openDialog"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="dialog_error_nuevo_tratamiento"
+      max-width="50%"
+    >
+      <DialogErrorNuevoTratamiento 
+        :texts="textosErrorNuevoTratamiento"
+        @close-dialog="closeDialog"
+      ></DialogErrorNuevoTratamiento>
     </v-dialog>
   </v-card>
 </template>
 
 <script>
+import { closeDialog } from '@/utils/dialog-functions.js'
+
 import DialogRepetirTratamiento from './DialogRepetirTratamiento.vue'
+import DialogListTratamientosFrecuentes from './DialogListTratamientosFrecuentes.vue'
+import DialogErrorNuevoTratamiento from './DialogErrorNuevoTratamiento.vue'
 
 export default {
+  props: ['isFrecuente'],
   data () {
     return {
       nombre: '',
       dosis: '',
       frecuencia: '',
-      dialog_repetir_tratamientos: false
+      dialog_repetir_tratamientos: false,
+      dialog_list_tratamientos_frecuentes: false,
+      dialog_error_nuevo_tratamiento: false,
+      textosErrorNuevoTratamiento: {
+        title: 'Tratamiento',
+        body: 'El tratamiento ya fue ingresado para el día de hoy.'
+      }
     }
   },
   computed: {
@@ -126,11 +163,9 @@ export default {
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 4: // Repetir Tratamiento
-          this.dialog_repetir_tratamientos = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openDialog (dialog) {
       switch (dialog) {
@@ -140,32 +175,45 @@ export default {
       }
     },
     crearTratamiento () {
-      if (!this.$store.getters.existeTratamiento(this.nombre)) {
-        let tratamiento = {
-          nombre: this.nombre,
-          dosis: this.dosis,
-          frecuencia: this.frecuencia
+      let tratamiento = {
+        nombre: this.nombre,
+        dosis: this.dosis,
+        frecuencia: this.frecuencia
+      }
+
+      if (this.isFrecuente) { // si se ingreso por Tratamientos Frecuentes
+        this.$emit('retrieve-tratamiento', tratamiento)
+
+        this.nombre = ''
+        this.dosis = ''
+        this.frecuencia = ''
+
+        // Se cierra el Dialog
+        this.$emit('close-dialog', 0)
+      } else { // Si se ingreso por Tratamientos
+        if (!this.$store.getters.existeTratamiento(this.nombre)) {
+          this.$store.dispatch('addTratamiento', tratamiento).then(() => {
+            this.nombre = ''
+            this.dosis = ''
+            this.frecuencia = ''
+  
+            // Se cierra el Dialog
+            this.$emit('close-dialog', 0)
+          }).catch(() => {
+            // Abrir Dialog Error Operación
+            this.$emit('open-dialog', 2)
+          })
+        } else {
+          // Abrir Dialog Error
+          this.$emit('open-dialog', 1)
         }
-
-        this.$store.dispatch('addTratamiento', tratamiento).then(() => {
-          this.nombre = ''
-          this.dosis = ''
-          this.frecuencia = ''
-
-          // Se cierra el Dialog
-          this.$emit('close-dialog', 0)
-        }).catch(() => {
-          // Abrir Dialog Error Firebase
-          this.$emit('open-dialog', 2)
-        })
-      } else {
-        // Abrir Dialog Error
-        this.$emit('open-dialog', 1)
       }
     }
   },
   components: {
-    DialogRepetirTratamiento
+    DialogRepetirTratamiento,
+    DialogListTratamientosFrecuentes,
+    DialogErrorNuevoTratamiento
   }
 }
 </script>

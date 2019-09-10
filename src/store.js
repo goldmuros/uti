@@ -38,13 +38,14 @@ export default new Vuex.Store({
       data: {}
     },
     userLogin: {
-      role: 'supervisor',
+      role: 'doctor',
       name: 'Bel'
     },
     activePage: '',
     mediaQuery: '',
     fechaSeleccionada: '',
-    diasTratamiento: []
+    diasTratamiento: [],
+    tratamientosFrecuentes: []
   },
   getters: {
     getValidarUsuario: (state) => (payload) => {
@@ -89,7 +90,7 @@ export default new Vuex.Store({
 
       if (state.pacienteSeleccionado.data.tratamientos.length > 0) {
         state.pacienteSeleccionado.data.tratamientos.filter((tratamiento) => {
-          if(tratamiento.dia === dia)
+          if(tratamiento.dia.fecha === dia)
             tratamientos.push(tratamiento)
         })
       }
@@ -99,10 +100,10 @@ export default new Vuex.Store({
     getDiasTratamientos: (state) => {
       let tratamientos = state.pacienteSeleccionado.data.tratamientos
 
-      if (tratamientos.length > 0) {
+      if (tratamientos != undefined && tratamientos.length > 0) {
         tratamientos.forEach((tratamiento) => {
           if (state.diasTratamiento.includes(tratamiento.dia) === false)
-            state.diasTratamiento.push(tratamiento.dia)
+            state.diasTratamiento.push(tratamiento.dia.fecha)
         })
       }
 
@@ -112,7 +113,15 @@ export default new Vuex.Store({
       let tratamientos = state.pacienteSeleccionado.data.tratamientos
 
       return tratamientos.find((tratamiento) => {
-        if (tratamiento.nombre === nombre && tratamiento.dia === fechaActual())
+        if (tratamiento.nombre === nombre && tratamiento.dia.fecha === fechaActual().fecha)
+          return true
+        
+        return false
+      })
+    },
+    existeTratamientoFrecuente: (state) => (nombre) => {
+      return state.tratamientosFrecuentes.find((tratamientoFrecuente) => {
+        if (tratamientoFrecuente.data.nombre === nombre)
           return true
         
         return false
@@ -121,39 +130,42 @@ export default new Vuex.Store({
     getUltimoParametro: (state) => {
       let parametros = []
 
-      state.pacienteSeleccionado.data.parametros.forEach((parametro) => {
-        let ultimoParametro = parametro.valores[parametro.valores.length - 1]
+      if (state.pacienteSeleccionado.data.show) {
 
-        let param = {
-          nombre: parametro.nombre,
-          valor: ultimoParametro.valor,
-          fecha: ultimoParametro.dia,
-          hora: ultimoParametro.hora,
-          clase: '',
-          valores: parametro.valores
-        }
-
-        // Se asigna un color dependiendo el parámetro
-        switch (parametro.nombre) {
-          case 'Presión Arterial':
-            param.clase = 'presionArterial'
-            break
-          case 'Temperatura':
-            param.clase = 'temperatura'
-            break
-          case 'Diuresis':
-            param.clase = 'diuresis'
-            break
-          case 'Frecuencia Cardiaca':
-            param.clase = 'frecuenciaCardiaca'
-            break
-          case 'Frecuencia Respiratoria':
-            param.clase = 'frecuenciaRespiratoria'
-            break
-        }
-
-        parametros.push(param)
-      })
+        state.pacienteSeleccionado.data.parametros.forEach((parametro) => {
+          let ultimoParametro = parametro.valores[parametro.valores.length - 1]
+  
+          let param = {
+            nombre: parametro.nombre,
+            valor: ultimoParametro.valor,
+            fecha: ultimoParametro.dia.fecha,
+            hora: ultimoParametro.dia.hora,
+            clase: '',
+            valores: parametro.valores
+          }
+  
+          // Se asigna un color dependiendo el parámetro
+          switch (parametro.nombre) {
+            case 'Presión Arterial':
+              param.clase = 'presionArterial'
+              break
+            case 'Temperatura':
+              param.clase = 'temperatura'
+              break
+            case 'Diuresis':
+              param.clase = 'diuresis'
+              break
+            case 'Frecuencia Cardiaca':
+              param.clase = 'frecuenciaCardiaca'
+              break
+            case 'Frecuencia Respiratoria':
+              param.clase = 'frecuenciaRespiratoria'
+              break
+          }
+  
+          parametros.push(param)
+        })
+      }
 
       return parametros
     },
@@ -168,6 +180,9 @@ export default new Vuex.Store({
     },
     getUsers: state => {
       return state.users
+    },
+    getTratamientosFrecuentes: state => {
+      return state.tratamientosFrecuentes
     }
   },
   mutations: {
@@ -227,6 +242,23 @@ export default new Vuex.Store({
           state.users.splice(index, 1)
         }
       })
+    },
+    setTratamientoFrecuente (state, tratamientoFrecuente) {
+      state.tratamientosFrecuentes.push(tratamientoFrecuente)
+    },
+    updateTratamientoFrecuente (state, updatedTratamientoFrecuente) {
+      state.tratamientosFrecuentes.find((tratamiento, index) => {
+        if (tratamiento.id === updatedTratamientoFrecuente.id)
+          state.tratamientosFrecuentes[index] = updatedTratamientoFrecuente // pisamos el tratamiento con el nuevo tratamiento
+      })
+    },
+    deleteTratamientoFrecuente (state, idTratamientoFrecuente) {
+      state.tratamientosFrecuentes.find((tratamiento, index) => {
+        if (tratamiento.id === idTratamientoFrecuente) {
+          state.tratamientosFrecuentes.splice(index, 1)
+          return true
+        }
+      })
     }
   },
   actions: {
@@ -280,7 +312,7 @@ export default new Vuex.Store({
         let paciente = getters.getPacienteSeleccionado
 
         paciente.data.tratamientos.push(tratamiento)
-        paciente.data.dias.push(fechaActual())
+        paciente.data.dias.push(fechaActual().fecha)
 
         // Se busca el paciente
         db.collection('pacientes').doc(paciente.id).update(
@@ -500,6 +532,82 @@ export default new Vuex.Store({
         .then(() => {
 
           commit('setDeleteUser', userId)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    getTratamientosFrecuentes ({commit}) {
+      return new Promise((resolve, reject) => {
+        db.collection('tratamientos-frecuentes').get()
+        .then((tratamientosFrecuentes) => {
+          tratamientosFrecuentes.docs.forEach(tratamientoFrecuente => {
+            let tratamiento = {
+              'id': tratamientoFrecuente.id,
+              'data': tratamientoFrecuente.data()
+            }
+  
+            commit('setTratamientoFrecuente', tratamiento)
+          })
+          
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    addTratamientoFrecuente: ({commit}, payload) => {
+      return new Promise((resolve, reject) => {
+        let tratamientoFrecuente = {
+          nombre: payload.nombre,
+          tratamientos: payload.tratamientos
+        }
+
+        // Se busca el paciente
+        db.collection('tratamientos-frecuentes').add(tratamientoFrecuente)
+        .then((nuevoTratamiento) => {
+          let tratamiento = {
+            'id': nuevoTratamiento.id,
+            'data': tratamientoFrecuente
+          }
+
+          commit('setTratamientoFrecuente', tratamiento)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    updateTratamientoFrecuente: ({commit}, payload) => {
+      return new Promise((resolve, reject) => {
+        let tratamientoFrecuente = {
+          nombre: payload.nombre,
+          tratamientos: payload.tratamientos
+        }
+
+        // Se busca el paciente
+        db.collection('tratamientos-frecuentes').doc(payload.id).update(
+          tratamientoFrecuente
+        )
+        .then(() => {
+          commit('updateTratamientoFrecuente', payload)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    deleteTratamientoFrecuente ({commit}, idTratamiento) {
+      return new Promise((resolve, reject) => {
+        // Eliminacion del Tratamiento Frecuente
+        db.collection('tratamientos-frecuentes').doc(idTratamiento).delete()
+        .then(() => {
+          commit('deleteTratamientoFrecuente', idTratamiento)
           return resolve()
         })
         .catch(() => {

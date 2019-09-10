@@ -43,7 +43,7 @@
       </v-dialog>
 
       <v-dialog
-        v-model="dialog_error_firebase"
+        v-model="dialog_error_operacion"
         max-width="50%"
       >
         <DialogErrorOperacion @close-dialog="closeDialog"/>
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import { closeDialog, openDialog } from '@/utils/dialog-functions.js'
+
 import DialogNuevoParametros from '../generales/dialogs/DialogNuevoParametros.vue'
 import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
 
@@ -60,7 +62,7 @@ export default {
   data () {
     return {
       dialog_nuevos_parametros: false,
-      dialog_error_firebase: false
+      dialog_error_operacion: false
     }
   },
   computed: {
@@ -70,21 +72,14 @@ export default {
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 2: //Error Firebase
-          this.dialog_error_firebase = false
-          break
-        case 5: // Nuevos Parametros
-          this.dialog_nuevos_parametros = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openDialog (dialog) {
-      switch (dialog) {
-        case 2: //Error Firebase
-          this.dialog_error_firebase = true
-          break
-      }
+      let dialog_component = openDialog(dialog)
+
+      this[dialog_component] = true
     }
   },
   components: {

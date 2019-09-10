@@ -54,7 +54,7 @@
             fab
             dark
             slot="activator"
-            @click="dialog_delete_usuario = true"
+            @click="dialog_delete_confirmacion = true"
           >
             <v-icon dark>delete_forever</v-icon>
           </v-btn>
@@ -107,9 +107,11 @@
 
     <v-dialog
       max-width="50%"
-      v-model="dialog_delete_usuario"
+      v-model="dialog_delete_confirmacion"
     >
-      <DialogDeleteUsuario
+      <DialogDeleteConfirmacion
+        :texts="textosConfirmacion"
+        :id="''"
         @open-dialog="openDialog"
         @close-dialog="closeDialog"/>
     </v-dialog>
@@ -117,16 +119,22 @@
 </template>
 
 <script>
+import { closeDialog, openDialog } from '@/utils/dialog-functions.js'
+
 import DialogOperacionCorrecta from './DialogOperacionCorrecta.vue'
 import DialogErrorOperacion from './DialogErrorOperacion.vue'
-import DialogDeleteUsuario from './DialogDeleteUsuario.vue'
+import DialogDeleteConfirmacion from './DialogDeleteConfirmacion.vue'
 
 export default {
   data () {
     return {
       dialog_operacion_correcta: false,
       dialog_error_operacion: false,
-      dialog_delete_usuario: false,
+      dialog_delete_confirmacion: false,
+      textosConfirmacion: {
+        title: 'Usuario',
+        body: 'usuario'
+      },
       showPassword: false,
       roles: ['Doctor', 'Enfermeria'],
       nombreRule: [
@@ -150,27 +158,14 @@ export default {
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 2: //Error Firebase
-          this.dialog_error_firebase = false
-          break
-        case 7: // Operacion correcta
-          this.dialog_operacion_correcta = false
-          break
-        case 10: // Delete usuario
-          this.dialog_delete_usuario = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openDialog (dialog) {
-      switch (dialog) {
-        case 2:
-          this.dialog_error_operacion = true
-          break
-        case 7:
-          this.dialog_operacion_correcta = true
-          break
-      }
+      let dialog_component = openDialog(dialog)
+
+      this[dialog_component] = true
     },
     updateUsuario () {
       this.$store.dispatch('updateUsuario', this.user)
@@ -187,7 +182,7 @@ export default {
   components: {
     DialogOperacionCorrecta,
     DialogErrorOperacion,
-    DialogDeleteUsuario
+    DialogDeleteConfirmacion
   }
 }
 </script>

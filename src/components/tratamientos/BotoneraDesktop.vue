@@ -9,7 +9,7 @@
           dark
           class="indigo"
           slot="activator"
-          @click="dialog_calendario = true"
+          @click="openCalendario"
         >
           <v-icon dark>date_range</v-icon>
         </v-btn>
@@ -31,10 +31,12 @@
       </v-tooltip>
 
       <v-dialog
-        v-model="dialog_calendario"
         max-width="35%"
+        v-model="dialog_calendario"
+        v-if="dialog_calendario"
       >
         <DialogCalendario
+          :diasConTratamientos="dias"
           @close-dialog="closeDialog">
         </DialogCalendario>
       </v-dialog>
@@ -44,6 +46,7 @@
         max-width="50%"
       >
         <DialogNuevoTratamiento
+          :isFrecuente="false"
           @close-dialog="closeDialog"
           @open-dialog="openDialog">
         </DialogNuevoTratamiento>
@@ -53,13 +56,14 @@
         v-model="dialog_error_nuevo_tratamiento"
         max-width="50%"
       >
-        <DialogErrorNuevoTratamiento 
+        <DialogErrorNuevoTratamiento
+          :texts="textosErrorNuevoTratamiento"
           @close-dialog="closeDialog"
         ></DialogErrorNuevoTratamiento>
       </v-dialog>
 
       <v-dialog
-        v-model="dialog_error_firebase"
+        v-model="dialog_error_operacion"
         max-width="50%"
       >
         <DialogErrorOperacion @close-dialog="closeDialog"/>
@@ -69,6 +73,8 @@
 </template>
 
 <script>
+import { closeDialog, openDialog } from '@/utils/dialog-functions.js'
+
 import DialogNuevoTratamiento from '../generales/dialogs/DialogNuevoTratamiento.vue'
 import DialogErrorNuevoTratamiento from '../generales/dialogs/DialogErrorNuevoTratamiento.vue'
 import DialogErrorOperacion from '../generales/dialogs/DialogErrorOperacion.vue'
@@ -80,38 +86,28 @@ export default {
       dialog_nuevo_tratamiento: false,
       dialog_calendario: false,
       dialog_error_nuevo_tratamiento: false,
-      dialog_error_firebase: false
+      dialog_error_operacion: false,
+      textosErrorNuevoTratamiento: {
+        title: 'Tratamiento',
+        body: 'El tratamiento ya fue ingresado para el día de hoy. Ingrese otro tratamiento.'
+      },
+      dias: []
     }
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 0: // Nuevo Tratamitneo
-          this.dialog_nuevo_tratamiento = false
-          break
-        case 1: // Error Nuevo Tratamiento
-          this.dialog_error_nuevo_tratamiento = false
-          break
-        case 2: //Error Firebase
-          this.dialog_error_firebase = false
-          break
-        case 3: // Calendario
-          this.dialog_calendario = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openDialog (dialog) {
-      switch (dialog) {
-        case 0:
-          this.dialog_nuevo_tratamiento = true
-          break
-        case 1:
-          this.dialog_error_nuevo_tratamiento = true
-          break
-        case 2:
-          this.dialog_error_firebase = true
-          break
-      }
+      let dialog_component = openDialog(dialog)
+
+      this[dialog_component] = true
+    },
+    openCalendario () {
+      this.dias = this.$store.getters.getDiasTratamientos
+      this.dialog_calendario = true
     }
   },
   components: {

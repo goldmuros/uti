@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import { closeDialog } from '@/utils/dialog-functions.js'
+
 import DialogOperacionCorrecta from './DialogOperacionCorrecta.vue'
 
 export default {
@@ -118,11 +120,9 @@ export default {
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 7: // Operacion correcta
-          this.dialog_operacion_correcta = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     addUsuario () {
       let usuario = {

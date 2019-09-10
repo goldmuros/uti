@@ -142,7 +142,7 @@ export default {
 
         this.$emit('close-dialog', 5)
       }).catch(() => {
-        // Abrir Dialog Error Firebase
+        // Abrir Dialog Error Operación
         this.$emit('open-dialog', 2)
       })
     }

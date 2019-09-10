@@ -53,6 +53,9 @@ export default {
       this.$store.commit('setPacienteSeleccionado', paciente)
     }
   },
+  created () {
+    this.$store.dispatch('getPacientes')
+  },
   components: {
     Pase
   }

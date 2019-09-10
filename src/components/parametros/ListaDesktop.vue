@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import { closeDialog } from '@/utils/dialog-functions.js'
+
 import DialogDetalleParametro from '../generales/dialogs/DialogDetalleParametro.vue'
 
 export default {
@@ -58,14 +60,9 @@ export default {
   },
   methods: {
     closeDialog (dialog) {
-      switch (dialog) {
-        case 2: //Error Firebase
-          this.dialog_error_firebase = false
-          break
-        case 6: // Detalle Parametros
-          this.dialog_detalle_parametro = false
-          break
-      }
+      let dialog_component = closeDialog(dialog)
+
+      this[dialog_component] = false
     },
     openParametro (item) {
       this.parametro = item
