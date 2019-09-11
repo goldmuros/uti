@@ -2,6 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { db } from './config/config-firebase.js'
 
+const clearData = (state) => {
+  state.userLogin = {}
+  state.pacientes = []
+  state.pacienteSeleccionado = {}
+  state.users = []
+  state.userSelected = {}
+  state.userLogin = {}
+  state.mediaQuery = ''
+  state.fechaSeleccionada = ''
+  state.diasTratamiento = []
+  state.tratamientosFrecuentes = []
+}
+
 let fechaActual = () => {
   let date = new Date(),
     mes = '' + (date.getMonth() + 1),
@@ -186,7 +199,7 @@ export default new Vuex.Store({
   },
   mutations: {
     logout (state) {
-      state.userLogin = {}
+      clearData(state)
     },
     setPacienteSeleccionado (state, payload) {
       if (state.pacienteSeleccionado.data.id != payload.id) {

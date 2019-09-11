@@ -23,9 +23,6 @@ export default {
     tratamientos () {
       return this.$store.getters.getTratamientosFrecuentes
     }
-  },
-  created () {
-    this.$store.dispatch('getTratamientosFrecuentes')
   }
 }
 </script>
