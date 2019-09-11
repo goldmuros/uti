@@ -36,10 +36,7 @@ export default new Vuex.Store({
       id: '',
       data: {}
     },
-    userLogin: {
-      // role: 'doctor',
-      // name: 'Bel'
-    },
+    userLogin: {},
     activePage: '',
     mediaQuery: '',
     fechaSeleccionada: '',
@@ -168,6 +165,9 @@ export default new Vuex.Store({
 
       return parametros
     },
+    getUser: state => {
+      return state.userLogin
+    },
     getUserRole: state => {
       return state.userLogin.role
     },
@@ -185,6 +185,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    logout (state) {
+      state.userLogin = {}
+    },
     setPacienteSeleccionado (state, payload) {
       if (state.pacienteSeleccionado.data.id != payload.id) {
         state.pacienteSeleccionado.show = true

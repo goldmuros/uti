@@ -20,11 +20,6 @@ import PanelCentral from '@/components/desktop/PanelCentral.vue'
 import Administracion from '@/components/desktop/Administracion.vue'
 
 export default {
-  // data () {
-  //   return {
-  //     role: ''
-  //   }
-  // },
   computed: {
     showPaciente () {
       return this.$store.getters.getShowPacienteSeleccionado
@@ -36,10 +31,6 @@ export default {
   created () {
     this.$store.dispatch('getTratamientosFrecuentes')
   },
-  // beforeMounted () {
-  //   this.role = this.$store.getters.getUserRole
-
-  // },
   components: {
     Pacientes,
     PanelCentral,

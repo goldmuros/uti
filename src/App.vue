@@ -15,7 +15,7 @@
             dark
             class="darken-3"
             slot="activator"
-            @click="logout"
+            @click.stop="logout"
           >
             <v-icon dark>power_settings_new</v-icon>
           </v-btn>
@@ -39,12 +39,18 @@ export default {
   },
   computed: {
     logueado () {
-      let page = this.$store.getters.getActivePage
+      let user = this.$store.getters.getUser
 
-      if (page !== null && page !== '')
+      if (user.name !== undefined)
         return true
 
       return false
+    }
+  },
+  methods: {
+    logout () {
+      this.$store.commit('logout')
+      this.$router.push('/')
     }
   },
   created () {
