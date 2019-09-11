@@ -21,7 +21,6 @@ let fechaActual = () => {
   }
 }
 
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -38,8 +37,8 @@ export default new Vuex.Store({
       data: {}
     },
     userLogin: {
-      role: 'doctor',
-      name: 'Bel'
+      // role: 'doctor',
+      // name: 'Bel'
     },
     activePage: '',
     mediaQuery: '',
@@ -228,6 +227,9 @@ export default new Vuex.Store({
         state.userSelected.data = payload.data
         state.userSelected.id = payload.id
       }
+    },
+    setUserActive (state, payload) {
+      state.userLogin = payload
     },
     setUser (state, payload) {
       state.users.push(payload)
@@ -465,6 +467,23 @@ export default new Vuex.Store({
         })
         .then(() => {
           commit('setParametros', parametros)
+          return resolve()
+        })
+        .catch(() => {
+          return reject()
+        })
+      })
+    },
+    getUser ({commit}, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection('usuarios').where('name', '==', payload.name)
+        .where('password', '==', payload.password)
+        .get().then((user) => {
+          let userActive = {
+            'name': user.docs[0].data().name,
+            'role': user.docs[0].data().role
+          }
+          commit('setUserActive', userActive)
           return resolve()
         })
         .catch(() => {

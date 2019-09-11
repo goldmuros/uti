@@ -41,6 +41,9 @@ const dialog_component = (dialog) => {
     case 12: // Lista Tratamientos Frecuentea
       component = 'dialog_list_tratamientos_frecuentes'
       break
+    case 13: // Error Login
+      component = 'dialog_error_login'
+      break
   }
 
   return component
