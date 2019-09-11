@@ -5,9 +5,16 @@ import { db } from './config/config-firebase.js'
 const clearData = (state) => {
   state.userLogin = {}
   state.pacientes = []
-  state.pacienteSeleccionado = {}
+  state.pacienteSeleccionado = {
+    id: '',
+    show: false,
+    data: {}
+  }
   state.users = []
-  state.userSelected = {}
+  state.userSelected = {
+    id: '',
+    data: {}
+  }
   state.userLogin = {}
   state.mediaQuery = ''
   state.fechaSeleccionada = ''
