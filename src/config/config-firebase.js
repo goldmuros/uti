@@ -8,7 +8,7 @@ const config_firebase = {
   projectId: '',
   storageBucket: ''
 }
-
+ 
 firebase.initializeApp(config_firebase)
 
 export const db = firebase.firestore()
