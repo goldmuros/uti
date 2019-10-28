@@ -1,5 +1,5 @@
 <template>
-  <v-layout row>
+  <v-layout row class="capa-scroll">
     <v-flex md12>
       <v-card 
         :key="index"
@@ -94,6 +94,11 @@ export default {
 
   .frecuenciaRespiratoria {
     background-color: yellow;
+  }
+
+  .capa-scroll {
+    overflow-y: auto;
+    height: 47vh!important;
   }
 
   .caja {

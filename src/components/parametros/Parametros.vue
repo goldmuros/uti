@@ -1,5 +1,5 @@
 <template>
-  <v-container class="capa-lista-parametros">
+  <v-container class="pt-1">
     <Lista></Lista>
     <Botonera></Botonera>
   </v-container>
@@ -16,9 +16,3 @@ export default {
   }  
 }
 </script>
-
-<style scoped>
-  .capa-lista-parametros {
-    padding: 0px !important;
-  }
-</style>

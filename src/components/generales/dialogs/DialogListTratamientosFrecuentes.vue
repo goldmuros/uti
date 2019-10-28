@@ -4,10 +4,17 @@
       <span class="headline">Tratamientos Frecuentes</span>
     </v-card-title>
     <v-card-text>
-      <v-container grid-list-md class="dialog-tratamientos-frecuentes">
+      <v-container
+        grid-list-md
+        class="tratamientos-frecuentes pt-0 pl-1 pr-1 pb-0"
+      >
         <v-layout wrap>
           <v-flex md4>
-            <v-list id="lista-tratamientos-frecuentes" two-line class="capa-scroll">
+            <v-list 
+              id="lista-tratamientos-frecuentes"
+              two-line
+              class="capa-scroll pt-0"
+            >
               <v-list-tile
                 class="caja mt-1"
                 :key="index"
@@ -25,26 +32,13 @@
                 </v-list-tile-action>
               </v-list-tile>
             </v-list>
-            <!-- <v-card  class="ma-3"
-              :key="index"
-              v-for="(tratamiento, index) in tratamientosFrecuentes">
-              <v-card-text>
-                <v-layout wrap>
-                <v-flex md4>
-                  <v-checkbox
-                    @click="seleccionarTratamientoFrecuente(index)"
-                  >
-                  </v-checkbox>
-                </v-flex>
-                <v-flex md8>
-                  {{ tratamiento.data.nombre }}
-                </v-flex>
-                </v-layout>
-              </v-card-text>
-            </v-card> -->
           </v-flex>
           <v-flex md8>
-            <v-list id="lista-tratamientos-frecuente-seleccionado" two-line class="capa-scroll">
+            <v-list
+              id="lista-tratamientos-frecuente-seleccionado"
+              two-line
+              class="capa-scroll pt-0"
+            >
               <v-list-tile
                 class="caja mt-1"
                 :key="index"
@@ -78,7 +72,7 @@
           small
           class="red"
           slot="activator"
-          @click="$emit('close-dialog', 12)">
+          @click.stop="$emit('close-dialog', 12)">
           <v-icon dark>close</v-icon>
         </v-btn>
         <span>Cerrar Ventana</span>
@@ -90,10 +84,10 @@
           dark
           small
           flat
-          class="primary"
+          class="primary ml-4"
           slot="activator"
           :disabled="!validarSeleccion"
-          @click="addTratamientosFrecuentes">
+          @click.stop="addTratamientosFrecuentes">
           <v-icon dark>add</v-icon>
         </v-btn>
         <span>Agregar Tratameintos Frecuentes</span>
@@ -236,7 +230,16 @@ export default {
 </script>
 
 <style scoped>
-  .dialog-tratamientos-frecuentes, #lista-tratamientos-frecuentes, #lista-tratamientos-frecuente-seleccionado {
+  .tratamientos-frecuentes {
     background-color: #bdbdbd!important;
+  }
+
+  .capa-scroll {
+    overflow-y: auto;
+  }
+
+  .caja {
+    border: 1px solid #000000;
+    background-color: white;
   }
 </style>

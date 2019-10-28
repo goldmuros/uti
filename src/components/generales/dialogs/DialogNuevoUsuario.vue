@@ -55,7 +55,7 @@
             dark
             class="red"
             slot="activator"
-            @click="$emit('close-dialog', 8)"
+            @click.stop="$emit('close-dialog', 8)"
           >
             <v-icon dark>close</v-icon>
           </v-btn>
@@ -70,7 +70,7 @@
             class="primary ml-4 mr-4"
             slot="activator"
             :disabled="!validarNuevoUsuario"
-            @click="addUsuario"
+            @click.stop="addUsuario"
           >
             <v-icon dark>add</v-icon>
           </v-btn>
@@ -100,7 +100,7 @@ export default {
       showPassword: false,
       nombre: '',
       password: '',
-      roles: ['Doctor', 'Enfermeria'],
+      roles: ['doctor', 'enfermeria'],
       role: '',
       nombreRule: [
         (v) => !!v || 'Nombre requerido'
@@ -126,8 +126,8 @@ export default {
     },
     addUsuario () {
       let usuario = {
-        name: this.nombre,
-        password: this.password,
+        name: this.nombre.toLowerCase(),
+        password: this.password.toLowerCase(),
         role: this.role
       }
 

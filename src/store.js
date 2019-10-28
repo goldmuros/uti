@@ -146,7 +146,7 @@ export default new Vuex.Store({
     getUltimoParametro: (state) => {
       let parametros = []
 
-      if (state.pacienteSeleccionado.data.show) {
+      if (state.pacienteSeleccionado.show) {
 
         state.pacienteSeleccionado.data.parametros.forEach((parametro) => {
           let ultimoParametro = parametro.valores[parametro.valores.length - 1]
@@ -154,8 +154,8 @@ export default new Vuex.Store({
           let param = {
             nombre: parametro.nombre,
             valor: ultimoParametro.valor,
-            fecha: ultimoParametro.dia.fecha,
-            hora: ultimoParametro.dia.hora,
+            fecha: ultimoParametro.fecha,
+            hora: ultimoParametro.hora,
             clase: '',
             valores: parametro.valores
           }
@@ -202,6 +202,9 @@ export default new Vuex.Store({
     },
     getTratamientosFrecuentes: state => {
       return state.tratamientosFrecuentes
+    },
+    getMediaQuery: state => {
+      return state.mediaQuery
     }
   },
   mutations: {
@@ -209,7 +212,7 @@ export default new Vuex.Store({
       clearData(state)
     },
     setPacienteSeleccionado (state, payload) {
-      if (state.pacienteSeleccionado.data.id != payload.id) {
+      if (state.pacienteSeleccionado.id != payload.id) {
         state.pacienteSeleccionado.show = true
         state.pacienteSeleccionado.data = payload.data
         state.pacienteSeleccionado.id = payload.id
@@ -326,12 +329,15 @@ export default new Vuex.Store({
     },
     addTratamiento ({commit, getters}, payload) {
       return new Promise((resolve, reject) => {
+        let user = getters.getUser
+
         let tratamiento = {
           nombre: payload.nombre,
           dosis: payload.dosis,
           frecuencia: payload.frecuencia,
           dia: fechaActual(),
-          estado: 'A'
+          estado: 'A',
+          profesional: user.id
         }
 
         let paciente = getters.getPacienteSeleccionado
@@ -434,11 +440,14 @@ export default new Vuex.Store({
       })
       .then(() => {
         commit('deletePaciente', paciente)
+        commit('setPacienteSeleccionado', paciente)
       })
     },
     addParametros ({commit, getters}, payload) {
       return new Promise((resolve, reject) => {
         let parametros = payload.parametros
+
+        let user = getters.getUser
 
         parametros.forEach(parametro => {
           if (parametro.valores[0].fecha == '' &&
@@ -448,7 +457,8 @@ export default new Vuex.Store({
           let valor = {// un valor para el tratamiento
             fecha: fechaActual().fecha,
             hora: fechaActual().hora,
-            valor: {}
+            valor: {},
+            profesional: user.id
           }
 
           switch (parametro.nombre) {
@@ -503,9 +513,11 @@ export default new Vuex.Store({
         .where('password', '==', payload.password)
         .get().then((user) => {
           let userActive = {
+            'id': user.docs[0].id,
             'name': user.docs[0].data().name,
             'role': user.docs[0].data().role
           }
+
           commit('setUserActive', userActive)
           return resolve()
         })
@@ -534,8 +546,7 @@ export default new Vuex.Store({
             'id': newDoc.id,
             'data': payload
           }
-          // commit('setUsuario', usuario)
-          commit('setUsuarioSeleccionado', usuario) // Muestra el detalle del User
+          commit('setUser', usuario)
           return resolve()
         })
         .catch(() => {
@@ -572,7 +583,6 @@ export default new Vuex.Store({
         // Update del Usuario
         db.collection('usuarios').doc(userId).delete()
         .then(() => {
-
           commit('setDeleteUser', userId)
           return resolve()
         })

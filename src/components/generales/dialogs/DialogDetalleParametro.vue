@@ -30,7 +30,7 @@
           small
           slot="activator"
           class="red"
-          @click="$emit('close-dialog', 6)"
+          @click.stop="$emit('close-dialog', 6)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>

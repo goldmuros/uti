@@ -77,30 +77,27 @@ export default {
 }
 </script>
 
-<style>
-  @media only screen and ( min-width: 901px ) {
-    .capa-scroll {
-      padding-top: 0px;
-      overflow-y: auto;
-      height: 325px;
-    }
+<style scoped>
+  .capa-scroll {
+    overflow-y: auto;
+    height: 50vh!important;
+  }
 
-    .caja {
-      border: 1px solid #000000;
-      background-color: white;
-    }
+  .caja {
+    border: 1px solid #000000;
+    background-color: white;
+  }
 
-    .suspender {
-      background-color: grey;
-      pointer-events: none;
-    }
+  .suspender {
+    background-color: grey;
+    pointer-events: none;
+  }
 
-    .activar {
-      pointer-events: auto!important;
-    }
+  .activar {
+    pointer-events: auto!important;
+  }
 
-    #lista-tratamientos {
-      background-color: #bdbdbd!important;
-    }
-  } 
+  #lista-tratamientos {
+    background-color: transparent!important;
+  }
 </style>

@@ -57,7 +57,7 @@
           dark
           small
           slot="activator"
-          @click="dialog_delete_confirmacion = true"
+          @click.stop="dialog_delete_confirmacion = true"
         >
           <v-icon dark>delete_forever</v-icon>
         </v-btn>
@@ -69,9 +69,9 @@
           fab
           dark
           small
-          class="red"
+          class="red ml-4 mr-4"
           slot="activator"
-          @click="$emit('close-dialog', 11)"
+          @click.stop="$emit('close-dialog', 11)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>
@@ -87,7 +87,7 @@
           class="primary" 
           slot="activator"
           :disabled="!validarTratamiento"
-          @click="addTratamientoFrecuente"
+          @click.stop="addTratamientoFrecuente"
         >
           <v-icon dark>check</v-icon>
         </v-btn>

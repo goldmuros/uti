@@ -23,7 +23,7 @@
         </v-tooltip>
       </v-toolbar-items>
     </v-toolbar>
-    <div>
+    <div class="app">
       <router-view></router-view>
     </div>
   </v-app>
@@ -54,17 +54,21 @@ export default {
     }
   },
   created () {
-    let mediaQueryMobile = window.matchMedia('(max-width: 700px)')
-    // let mediaQueryTablet = window.matchMedia('(max-width: 1024px)')
-
     let mediaQuery = 'desktop'
 
-    if (mediaQueryMobile.matches)
+    if (this.$vuetify.breakpoint.xs)
       mediaQuery = 'mobile'
-    else if (mediaQueryMobile.matches)
+    else if (this.$vuetify.breakpoint.sm)
       mediaQuery = 'tablet'
 
     this.$store.commit('setMediaQuery', mediaQuery)
   }
 }
 </script>
+
+<style scoped>
+  .app {
+    height: 100%;
+    background: grey;
+  }
+</style>

@@ -44,6 +44,9 @@ const dialog_component = (dialog) => {
     case 13: // Error Login
       component = 'dialog_error_login'
       break
+    case 14: // Forgot Pass
+      component = 'dialog_forgot_pass'
+      break
   }
 
   return component

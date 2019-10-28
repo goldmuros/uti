@@ -4,8 +4,8 @@
       <span class="headline">Repetir Tratamientos</span>
     </v-card-title>
     <v-card-text>
-      <v-container grid-list-md>
-        <v-layout wrap>
+      <v-container class="pa-0">
+        <v-layout>
           <v-flex md4>
             <v-date-picker
               :show-current="true"
@@ -18,20 +18,22 @@
               scrollable >
             </v-date-picker>
           </v-flex>
-          <v-flex md8>
-            <v-container pt-0>
-              <v-layout row>
-                <v-flex md10></v-flex>
-                <v-flex md2 pl-4 class="check-todos">
-                  <v-checkbox
-                    label="Todos"
-                    v-model="seleccionar"
-                    @click.native="seleccionarTodos">
-                  </v-checkbox>
-                </v-flex>
-              </v-layout>
-            </v-container>
-            <v-list id="lista-nuevos-tratamientos" two-line class="capa-scroll">
+          <v-flex md8 class="pl-5">
+            <v-layout row class="mt-0">
+              <v-flex md10></v-flex>
+              <v-flex md2>
+                <v-checkbox
+                  label="Todos"
+                  class="mt-0 pt-0"
+                  v-model="seleccionar"
+                  @click.native="seleccionarTodos"/>
+              </v-flex>
+            </v-layout>
+            <v-list
+              id="lista-nuevos-tratamientos" 
+              two-line 
+              class="capa-scroll pt-0"
+            >
               <v-list-tile
                 class="caja mt-1"
                 v-for="(tratamiento, index) in tratamientos"
@@ -62,9 +64,9 @@
           fab
           dark
           small
-          class="red"
+          class="red mr-4"
           slot="activator"
-          @click="$emit('close-dialog', 4)"
+          @click.stop="$emit('close-dialog', 4)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>
@@ -80,7 +82,7 @@
           class="primary"
           slot="activator"
           :disabled="!validarSeleccion"
-          @click="agregarTratamientos"
+          @click.stop="agregarTratamientos"
         >
           <v-icon dark>add</v-icon>
         </v-btn>
@@ -204,8 +206,11 @@ export default {
 
 <style>
   .capa-scroll {
-    padding-top: 0px;
     overflow-y: auto;
-    height: 325px;
+    height: 44vh;
+  }
+
+  .caja {
+    border: 1px solid #000000;
   }
 </style>

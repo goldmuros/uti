@@ -9,7 +9,7 @@
       <v-btn
         fab
         class="red"
-        @click="$emit('close-dialog', 2)"
+        @click.stop="$emit('close-dialog', 2)"
       >
         <v-icon dark>close</v-icon>
       </v-btn>

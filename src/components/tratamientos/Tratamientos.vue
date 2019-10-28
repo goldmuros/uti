@@ -1,13 +1,11 @@
 <template>
-  <v-container class="capa-lista-tratamientos pt-4">
-    <v-layout row>
+  <v-container class="pt-1 pl-0 pr-0">
+    <v-layout class="ml-0 mr-0">
       <v-flex md12 dark class="light-green lighten-2 text-md-left pl-3">
         Tratamientos del día: <b>{{ fechaSeleccionado }}</b>
       </v-flex>
     </v-layout>
-
-    <Lista></Lista>
-    <br/>
+    <Lista/>
     <Botonera v-if="role === 'doctor'"></Botonera>
   </v-container>
 </template>
@@ -31,10 +29,3 @@ export default {
   }
 }
 </script>
-
-<style>
-  .capa-lista-tratamientos {
-    padding: 0px!important;
-    max-height:330px!important;
-  }
-</style>

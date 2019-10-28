@@ -15,7 +15,7 @@
           dark
           small
           slot="activator"
-          @click="$emit('close-dialog', 10)"
+          @click.stop="$emit('close-dialog', 10)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>
@@ -28,11 +28,10 @@
           dark
           small
           flat
-          class="red"
+          class="red ml-4"
           slot="activator"
-          @click="deleteThis"
+          @click.stop="deleteThis"
         >
-          <!-- @click="deleteUsuario" -->
           <v-icon dark>done</v-icon>
         </v-btn>
         <span>Eliminar {{ texts.title }}</span>

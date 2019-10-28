@@ -42,7 +42,7 @@
           fab
           dark
           small
-          class="primary"
+          class="primary mr-4"
           slot="activator"
           @click="dialog_list_tratamientos_frecuentes = true"
         >
@@ -70,9 +70,9 @@
           fab
           dark
           small
-          class="red"
+          class="red ml-4 mr-4"
           slot="activator"
-          @click="$emit('close-dialog', 0)"
+          @click.stop="$emit('close-dialog', 0)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>
@@ -85,10 +85,10 @@
           dark
           small
           flat
-          class="primary" 
+          class="primary"
           slot="activator"
           :disabled="!validarTratamiento"
-          @click="crearTratamiento">
+          @click.stop="crearTratamiento">
           <v-icon dark>add</v-icon>
         </v-btn>
         <span>Agregar Tratamientos</span>

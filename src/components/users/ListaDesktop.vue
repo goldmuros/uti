@@ -22,7 +22,8 @@
 export default {
   computed: {
     users () {
-      return this.$store.getters.getUsers
+      let users = this.$store.getters.getUsers
+      return users
     }
   },
   methods: {

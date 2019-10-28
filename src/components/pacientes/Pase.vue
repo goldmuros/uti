@@ -1,7 +1,7 @@
 <template>
   <v-flex>
     <v-tooltip right>
-      <v-btn light slot="activator" hover @click="dialog_pase = true">Pase</v-btn>
+      <v-btn light slot="activator" hover @click.stop="dialog_pase = true">Pase</v-btn>
       <span>Pase paciente</span>
     </v-tooltip>
     <!-- Pase -->

@@ -67,7 +67,7 @@
             dark
             class="red ml-4"
             slot="activator"
-            @click="$emit('close-dialog', 9)"
+            @click.stop="$emit('close-dialog', 9)"
           >
             <v-icon dark>close</v-icon>
           </v-btn>
@@ -82,7 +82,7 @@
             class="primary ml-4 mr-4"
             slot="activator"
             :disabled="!validarUsuario"
-            @click="updateUsuario"
+            @click.stop="updateUsuario"
           >
             <v-icon dark>add</v-icon>
           </v-btn>
@@ -136,7 +136,7 @@ export default {
         body: 'usuario'
       },
       showPassword: false,
-      roles: ['Doctor', 'Enfermeria'],
+      roles: ['doctor', 'enfermeria'],
       nombreRule: [
         (v) => !!v || 'Nombre requerido'
       ],
@@ -160,6 +160,9 @@ export default {
     closeDialog (dialog) {
       let dialog_component = closeDialog(dialog)
 
+      if (dialog_component === 'dialog_delete_confirmacion')
+        this.$emit('close-dialog', 9)
+
       this[dialog_component] = false
     },
     openDialog (dialog) {
@@ -168,7 +171,13 @@ export default {
       this[dialog_component] = true
     },
     updateUsuario () {
-      this.$store.dispatch('updateUsuario', this.user)
+      let user = {
+        name: this.user.toLowerCase(),
+        password: this.password.toLowerCase(),
+        role: this.role
+      }
+
+      this.$store.dispatch('updateUsuario', user)
       .then(() => {
         this.dialog_operacion_correcta = true
 

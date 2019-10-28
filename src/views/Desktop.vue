@@ -1,15 +1,11 @@
 <template>
-  <v-container fluid class="grid-list-md text-md-center">
+  <v-container fluid class="grid-list-md text-md-center pt-0 pl-0 pr-0">
     <!-- Admin Usuarios -->
     <Administracion v-if="role === 'supervisor'"/>
     <!-- Pacientes -->
     <v-layout row wrap v-else>
-      <v-flex md3>
-        <Pacientes/>
-      </v-flex>
-      <v-flex md9 v-if="showPaciente">
-        <PanelCentral/>
-      </v-flex>
+      <Pacientes/>
+      <PanelCentral v-if="showPaciente"/>
     </v-layout>
   </v-container>
 </template>

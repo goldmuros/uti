@@ -1,7 +1,11 @@
 <template>
-  <v-flex>
-    <Lista></Lista>
-    <NuevoPaciente v-if="role === 'doctor'"></NuevoPaciente>
+  <v-flex md3>
+    <v-layout row class="lista">
+      <Lista/>
+    </v-layout>
+    <v-layout>
+      <NuevoPaciente v-if="role === 'doctor'"></NuevoPaciente>
+    </v-layout>
   </v-flex>
 </template>
 
@@ -21,3 +25,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .lista {
+    height: 77vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+</style>

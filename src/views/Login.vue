@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <v-card class="capa-login">
-      <v-card-title>
-        <h1 class="display-1">Ingrese Usuario y password</h1>
-      </v-card-title>
+  <v-container align-center :class="capaLogin" class="text-md-center">
+    <v-card>
       <v-card-text>
         <v-form>
           <v-text-field
@@ -30,35 +27,41 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-tooltip top>
-          <v-btn
-            color="primary"
-            slot="activator"
-            @click="login"
-          >
-            Inicio
-          </v-btn>
-          <span>Inicio</span>
-        </v-tooltip>
-        <v-tooltip top>
-          <v-btn
-            slot="activator"
-            @click="limpiar">Limpiar</v-btn>
-          <span>Borrar campos</span>
-        </v-tooltip>
+        <v-layout align-center class="pb-3">
+          <v-flex md7>
+            <v-tooltip top>
+              <v-btn
+                color="primary"
+                slot="activator"
+                @click="login"
+              >
+                Inicio
+              </v-btn>
+              <span>Inicio</span>
+            </v-tooltip>
+          </v-flex>
+          <v-flex md5>
+            <a @click="dialog_forgot_pass = true" class="forgot-pw">Olvido su Password?</a>
+          </v-flex>
+        </v-layout>
       </v-card-actions>
     </v-card>
 
     <v-dialog v-model="dialog_error_login" max-width="50%">
       <DialogErrorLogin @close-dialog="closeDialog" />
     </v-dialog>
-  </div>
+
+    <v-dialog v-model="dialog_forgot_pass" max-width="50%">
+      <DialogForgotPass @close-dialog="closeDialog" />
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
 import { closeDialog } from '@/utils/dialog-functions.js'
 
 import DialogErrorLogin from '../components/generales/dialogs/DialogErrorLogin.vue'
+import DialogForgotPass from '../components/generales/dialogs/DialogForgotPass.vue'
 
 export default {
   name: 'Login',
@@ -66,6 +69,7 @@ export default {
     return {
       showPassword: false,
       dialog_error_login: false,
+      dialog_forgot_pass: false,
       usuario: '',
       password: '',
       usuarioRegla: [
@@ -73,7 +77,8 @@ export default {
       ],
       passwordRegla: [
         (v) => !!v || 'Password requerido'
-      ]
+      ],
+      capaLogin: ''
     }
   },
   methods: {
@@ -96,36 +101,26 @@ export default {
           this.dialog_error_login = true
         })
       }
-    },
-    limpiar () {
-      this.usuario = ''
-      this.password = ''
     }
   },
   components: {
-    DialogErrorLogin
+    DialogErrorLogin,
+    DialogForgotPass
+  },
+  created() {
+    this.capaLogin = this.$store.getters.getMediaQuery
   }
+
 }
 </script>
 
 <style>
-  @media only screen and ( max-width: 360px ) and (orientation : portrait) {
-    .capa-login {
-      height: 93vh;
-    }
+  .mobile {
+    height: 93vh;
   }
 
-  @media only screen and ( max-width: 900px ) and (orientation : landscape) {
-    .capa-login {
-      height: 56vh;
-    }
-  }
-
-  .background-blanco {
-    background-color: white;
-  }
-
-  .formUsuario {
-    overflow-y: auto!important;
+  .desktop {
+    height: 56vh;
+    width: 500px;
   }
 </style>

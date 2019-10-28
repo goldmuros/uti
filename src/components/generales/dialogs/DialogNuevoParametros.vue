@@ -69,9 +69,9 @@
           fab
           dark
           small
-          class="red"
+          class="red mr-4"
           slot="activator"
-          @click="$emit('close-dialog', 5)"
+          @click.stop="$emit('close-dialog', 5)"
         >
           <v-icon dark>close</v-icon>
         </v-btn>
@@ -87,7 +87,7 @@
           class="primary"
           slot="activator"
           :disabled="!validarParametros"
-          @click="addParametros"
+          @click.stop="addParametros"
         >
           <v-icon dark>add</v-icon>
         </v-btn>

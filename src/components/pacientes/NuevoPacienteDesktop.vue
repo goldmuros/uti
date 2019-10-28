@@ -1,5 +1,5 @@
 <template>
-  <v-layout row>
+  <!-- <v-layout row> -->
     <v-flex md12 class="text-xs-center">
       <v-tooltip right>
         <v-btn fab dark class="indigo" slot="activator" @click.stop="dialog_nuevo_paciente = true">
@@ -98,7 +98,7 @@
         </v-card>
       </v-dialog>
     </v-flex>
-  </v-layout> 
+  <!-- </v-layout>  -->
 </template>
 
 <script>
